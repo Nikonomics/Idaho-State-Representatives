@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Select Your District{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2>Multiple Districts Found</h2>
+        <div class="alert alert-info">
+            <p>ZIP code <strong>{{ zip_code }}</strong> spans multiple legislative districts. Please select your district:</p>
+        </div>
+        
+        <div class="row">
+            {% for district in districts %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">District {{ district }}</h5>
+                        <a href="/district/{{ district }}?zip_code={{ zip_code }}" class="btn btn-primary">
+                            View District {{ district }} Representatives
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4">
+            <p class="text-muted">
+                <strong>Need help choosing?</strong> 
+                <a href="https://legislature.idaho.gov/legislators/whosmylegislator/" target="_blank">
+                    Use the official district finder
+                </a> to determine your exact district.
+            </p>
+            <a href="/" class="btn btn-outline-primary">← Try Different ZIP Code</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

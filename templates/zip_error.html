@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}ZIP Code Not Found{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="alert alert-warning">
+            <h4>ZIP Code Not Found</h4>
+            <p>The ZIP code <strong>{{ zip_code }}</strong> was not found in our Idaho legislative district database.</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5>Please try:</h5>
+                <ul>
+                    <li>Double-check that you entered a valid 5-digit Idaho ZIP code</li>
+                    <li>Use the <a href="https://legislature.idaho.gov/legislators/whosmylegislator/" target="_blank">official district finder</a> if you're unsure</li>
+                    <li>Enter your district number directly if you know it</li>
+                </ul>
+                
+                <div class="mt-4">
+                    <a href="/" class="btn btn-primary">← Try Again</a>
+                    <a href="https://legislature.idaho.gov/legislators/whosmylegislator/" target="_blank" class="btn btn-outline-info">Find My District</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

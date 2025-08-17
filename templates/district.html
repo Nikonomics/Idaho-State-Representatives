@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}District {{ district }} Representatives{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        {% if zip_code %}
+        <div class="alert alert-success">
+            <strong>Your District: {{ district }}</strong>
+            {% if zip_code %} (ZIP code {{ zip_code }}){% endif %}
+        </div>
+        {% endif %}
+        
+        <h2>District {{ district }} Representatives</h2>
+        <a href="/" class="btn btn-outline-primary mb-4">← Back to Home</a>
+        
+        {% if reps.senate %}
+        <div class="mb-4">
+            <h3>State Senator</h3>
+            <div class="rep-card party-{{ reps.senate.party.value.lower() }}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>{{ reps.senate.name }} ({{ reps.senate.party.value }})</h5>
+                        <p class="mb-1"><strong>Email:</strong> <a href="mailto:{{ reps.senate.contact.email }}">{{ reps.senate.contact.email }}</a></p>
+                        {% if reps.senate.contact.statehouse_phone %}
+                        <p class="mb-1"><strong>Statehouse Phone:</strong> {{ reps.senate.contact.statehouse_phone }}</p>
+                        {% endif %}
+                        {% if reps.senate.contact.home_phone %}
+                        <p class="mb-1"><strong>Home Phone:</strong> {{ reps.senate.contact.home_phone }}</p>
+                        {% endif %}
+                        {% if reps.senate.occupation %}
+                        <p class="mb-1"><strong>Occupation:</strong> {{ reps.senate.occupation }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="/analyze?name={{ reps.senate.name }}" class="btn btn-info btn-sm">Research This Rep</a>
+                    </div>
+                </div>
+                {% if reps.senate.committees %}
+                <div class="mt-2">
+                    <strong>Committees:</strong><br>
+                    {% for committee in reps.senate.committees %}
+                    <span class="committee-badge">{{ committee }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if reps.house %}
+        <div class="mb-4">
+            <h3>House Representatives</h3>
+            {% for rep in reps.house %}
+            <div class="rep-card party-{{ rep.party.value.lower() }}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>{{ rep.name }} ({{ rep.party.value }}) 
+                        {% if rep.house_seat %}- Seat {{ rep.house_seat.value }}{% endif %}</h5>
+                        <p class="mb-1"><strong>Email:</strong> <a href="mailto:{{ rep.contact.email }}">{{ rep.contact.email }}</a></p>
+                        {% if rep.contact.statehouse_phone %}
+                        <p class="mb-1"><strong>Statehouse Phone:</strong> {{ rep.contact.statehouse_phone }}</p>
+                        {% endif %}
+                        {% if rep.contact.home_phone %}
+                        <p class="mb-1"><strong>Home Phone:</strong> {{ rep.contact.home_phone }}</p>
+                        {% endif %}
+                        {% if rep.occupation %}
+                        <p class="mb-1"><strong>Occupation:</strong> {{ rep.occupation }}</p>
+                        {% endif %}
+                        {% if rep.term_number %}
+                        <p class="mb-1"><strong>Term:</strong> {{ rep.term_number }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="/analyze?name={{ rep.name }}" class="btn btn-info btn-sm">Research This Rep</a>
+                    </div>
+                </div>
+                {% if rep.committees %}
+                <div class="mt-2">
+                    <strong>Committees:</strong><br>
+                    {% for committee in rep.committees %}
+                    <span class="committee-badge">{{ committee }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if not reps.senate and not reps.house %}
+        <div class="alert alert-warning">
+            <h4>No representatives found for District {{ district }}</h4>
+            <p>Please check that you entered a valid district number (1-35).</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

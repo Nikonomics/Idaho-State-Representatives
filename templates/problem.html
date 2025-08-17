@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Problem Analysis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2>Problem Analysis</h2>
+        <a href="/" class="btn btn-outline-primary mb-4">← Back to Home</a>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Describe Your Problem</h5>
+                <p class="card-text">Tell us about an issue you'd like to address with the Idaho Legislature. We'll recommend which committees and representatives to contact.</p>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="problem_description" class="form-label">Problem Description</label>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" 
+                                placeholder="Example: Small businesses in my area need tax relief to stay competitive..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Analyze Problem</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Example Problems:</h5>
+            <ul class="list-group">
+                <li class="list-group-item">Rural schools need better funding for technology</li>
+                <li class="list-group-item">Small businesses struggling with state regulations</li>
+                <li class="list-group-item">Need better healthcare access in rural areas</li>
+                <li class="list-group-item">Agricultural water rights concerns</li>
+                <li class="list-group-item">Infrastructure improvements needed for economic development</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

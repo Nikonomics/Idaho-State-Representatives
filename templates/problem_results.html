@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Problem Analysis Results{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <h2>Problem Analysis Results</h2>
+        <a href="/problem" class="btn btn-outline-primary mb-4">← Analyze Another Problem</a>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Your Problem</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ analysis.problem_description }}</p>
+            </div>
+        </div>
+        
+        {% if analysis.recommended_committees %}
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Recommended Committees</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for committee in analysis.recommended_committees %}
+                    <li class="list-group-item">{{ committee }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if analysis.target_representatives %}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Key Representatives to Contact</h5>
+            </div>
+            <div class="card-body">
+                {% for rep in analysis.target_representatives[:8] %}
+                <div class="rep-card party-{{ rep.party.value.lower() }}">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h6>{{ rep.name }} ({{ rep.party.value }})</h6>
+                            <p class="mb-1"><strong>District:</strong> {{ rep.district }} | <strong>Chamber:</strong> {{ rep.chamber.value }}</p>
+                            <p class="mb-1"><strong>Email:</strong> <a href="mailto:{{ rep.contact.email }}">{{ rep.contact.email }}</a></p>
+                            {% if rep.contact.statehouse_phone %}
+                            <p class="mb-1"><strong>Phone:</strong> {{ rep.contact.statehouse_phone }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <a href="/analyze?name={{ rep.name }}" class="btn btn-outline-info btn-sm">Research</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Recommended Strategy</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ analysis.strategy }}</p>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Talking Points</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for point in analysis.talking_points %}
+                    <li>{{ point }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

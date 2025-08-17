@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis: {{ analysis.representative.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <a href="/analyze" class="btn btn-outline-primary mb-4">← Research Another Rep</a>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">{{ analysis.representative.name }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>District:</strong> {{ analysis.representative.district }}</p>
+                        <p><strong>Chamber:</strong> {{ analysis.representative.chamber.value }}</p>
+                        <p><strong>Party:</strong> {{ analysis.representative.party.value }}</p>
+                        {% if analysis.representative.house_seat %}
+                        <p><strong>House Seat:</strong> {{ analysis.representative.house_seat.value }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Email:</strong> <a href="mailto:{{ analysis.representative.contact.email }}">{{ analysis.representative.contact.email }}</a></p>
+                        {% if analysis.representative.contact.statehouse_phone %}
+                        <p><strong>Phone:</strong> {{ analysis.representative.contact.statehouse_phone }}</p>
+                        {% endif %}
+                        {% if analysis.representative.occupation %}
+                        <p><strong>Occupation:</strong> {{ analysis.representative.occupation }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Background Summary</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ analysis.background_summary }}</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Key Issues</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for issue in analysis.key_issues %}
+                            <li class="list-group-item">{{ issue }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-4 h-100">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">Political Positions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for topic, position in analysis.political_positions.items() %}
+                        <div class="mb-3">
+                            <strong>{{ topic }}:</strong>
+                            <p class="small mb-0">{{ position }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Seat Risk Assessment</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-danger" style="width: {{ analysis.seat_risk_score * 10 }}%"></div>
+                        </div>
+                        <p><strong>Risk Score:</strong> {{ analysis.seat_risk_score }}/10</p>
+                        <p class="small">
+                            {% if analysis.seat_risk_score < 3 %}
+                            Safe seat - unlikely to face serious challenge
+                            {% elif analysis.seat_risk_score < 7 %}
+                            Moderate risk - could face competitive race
+                            {% else %}
+                            High risk - vulnerable to challenger
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Likely Challengers</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for challenger in analysis.likely_challengers %}
+                            <li class="list-group-item">{{ challenger }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if analysis.representative.committees %}
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Committee Memberships</h5>
+            </div>
+            <div class="card-body">
+                {% for committee in analysis.representative.committees %}
+                <span class="committee-badge">{{ committee }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

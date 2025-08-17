@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Representative Research{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2>Representative Research</h2>
+        <a href="/" class="btn btn-outline-primary mb-4">← Back to Home</a>
+        
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Research a Representative</h5>
+                <p class="card-text">Enter the name of any Idaho state representative or senator to get detailed analysis.</p>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="representative_name" class="form-label">Representative Name</label>
+                        <input type="text" class="form-control" id="representative_name" name="representative_name" 
+                               placeholder="Example: Brad Little, Mike Crapo..." required>
+                        <div class="form-text">You can enter a partial name - we'll find the best match.</div>
+                    </div>
+                    <button type="submit" class="btn btn-info">Research Representative</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>What You'll Get:</h5>
+            <ul class="list-group">
+                <li class="list-group-item">📊 Political background and key issues</li>
+                <li class="list-group-item">🏛️ Committee memberships and leadership roles</li>
+                <li class="list-group-item">📈 Seat risk assessment (how secure their position is)</li>
+                <li class="list-group-item">🗳️ Likely challengers and political dynamics</li>
+                <li class="list-group-item">💼 Professional background and expertise areas</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

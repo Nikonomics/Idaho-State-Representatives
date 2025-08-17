@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Legislative Committees{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <h2>Idaho Legislative Committees</h2>
+        <a href="/" class="btn btn-outline-primary mb-4">← Back to Home</a>
+        
+        {% if committees %}
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Senate Committees</h3>
+                {% for committee in committees %}
+                {% if committee.chamber.value == 'Senate' %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ committee.name }}</h5>
+                        {% if committee.chair %}
+                        <p class="mb-1"><strong>Chair:</strong> {{ committee.chair }}</p>
+                        {% endif %}
+                        {% if committee.vice_chair %}
+                        <p class="mb-1"><strong>Vice Chair:</strong> {{ committee.vice_chair }}</p>
+                        {% endif %}
+                        {% if committee.members %}
+                        <div class="mt-2">
+                            <strong>Members:</strong><br>
+                            {% for member in committee.members %}
+                            <span class="badge bg-secondary me-1">{{ member }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="col-md-6">
+                <h3>House Committees</h3>
+                {% for committee in committees %}
+                {% if committee.chamber.value == 'House' %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ committee.name }}</h5>
+                        {% if committee.chair %}
+                        <p class="mb-1"><strong>Chair:</strong> {{ committee.chair }}</p>
+                        {% endif %}
+                        {% if committee.vice_chair %}
+                        <p class="mb-1"><strong>Vice Chair:</strong> {{ committee.vice_chair }}</p>
+                        {% endif %}
+                        {% if committee.members %}
+                        <div class="mt-2">
+                            <strong>Members:</strong><br>
+                            {% for member in committee.members %}
+                            <span class="badge bg-secondary me-1">{{ member }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4>Committee Data Loading</h4>
+            <p>Committee information is being loaded from the Idaho Legislature website. This may take a moment on first use.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

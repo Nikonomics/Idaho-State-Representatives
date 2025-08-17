@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1 class="text-center mb-4">Idaho Representatives Contact Tool</h1>
+        <p class="lead text-center">Find your state representatives and get help navigating Idaho's legislative process.</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Find My Representatives</h5>
+                        <p class="card-text">Enter your Idaho ZIP code to find your state senator and house representatives.</p>
+                        <form id="zipForm" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" id="zipCode" class="form-control" placeholder="Enter your Idaho ZIP code (e.g., 83651)" pattern="\d{5}" maxlength="5" required>
+                                <button class="btn btn-primary" type="submit">Find Reps</button>
+                            </div>
+                        </form>
+                        <div class="small text-muted">
+                            <a href="https://legislature.idaho.gov/legislators/whosmylegislator/" target="_blank">Don't know your district? Find it here</a>
+                        </div>
+                        <hr>
+                        <div class="small">
+                            <strong>Advanced:</strong> Or enter district number directly
+                            <form id="districtForm" class="mt-2">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" id="districtNumber" class="form-control" placeholder="District #" min="1" max="35">
+                                    <button class="btn btn-outline-secondary btn-sm" type="submit">Go</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Problem Analysis</h5>
+                        <p class="card-text">Describe an issue and get recommendations on which committees and representatives to contact.</p>
+                        <a href="/problem" class="btn btn-success">Analyze Problem</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Representative Research</h5>
+                        <p class="card-text">Get in-depth analysis of any Idaho state representative or senator.</p>
+                        <a href="/analyze" class="btn btn-info">Research Rep</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Browse Committees</h5>
+                        <p class="card-text">View all legislative committees and their membership.</p>
+                        <a href="/committees" class="btn btn-secondary">View Committees</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+            <strong>Note:</strong> This tool uses live data from the Idaho Legislature website to ensure accuracy.
+        </div>
+    </div>
+</div>
+
+<script>
+// Handle ZIP code form submission
+document.getElementById('zipForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const zipCode = document.getElementById('zipCode').value;
+    if (zipCode && zipCode.length === 5) {
+        window.location.href = `/zip/${zipCode}`;
+    }
+});
+
+// Handle district form submission
+document.getElementById('districtForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const district = document.getElementById('districtNumber').value;
+    if (district) {
+        window.location.href = `/district/${district}`;
+    }
+});
+</script>
+{% endblock %}
