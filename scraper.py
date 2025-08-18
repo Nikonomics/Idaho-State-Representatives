@@ -30,7 +30,14 @@ class IdahoLegislatureScraper:
                 cache_time = datetime.fromisoformat(cache_data.get('timestamp', ''))
                 if datetime.now() - cache_time < timedelta(hours=self.CACHE_DURATION_HOURS):
                     print(f"Using cached data from {cache_time}")
-                    return cache_data.get('data')
+                    
+                    # Convert dictionaries back to objects
+                    cached_dict_data = cache_data.get('data', {})
+                    return {
+                        'senators': [self._dict_to_rep(rep_dict) for rep_dict in cached_dict_data.get('senators', [])],
+                        'representatives': [self._dict_to_rep(rep_dict) for rep_dict in cached_dict_data.get('representatives', [])],
+                        'committees': [self._dict_to_committee(committee_dict) for committee_dict in cached_dict_data.get('committees', [])]
+                    }
         except Exception as e:
             print(f"Error loading cache: {e}")
         return None
@@ -38,15 +45,86 @@ class IdahoLegislatureScraper:
     def _save_cache(self, data: Dict):
         """Save data to cache with timestamp"""
         try:
+            # Convert Representative objects to dictionaries for JSON serialization
+            serializable_data = {
+                'senators': [self._rep_to_dict(rep) for rep in data['senators']],
+                'representatives': [self._rep_to_dict(rep) for rep in data['representatives']],
+                'committees': [self._committee_to_dict(committee) for committee in data['committees']]
+            }
+            
             cache_data = {
                 'timestamp': datetime.now().isoformat(),
-                'data': data
+                'data': serializable_data
             }
             with open(self.CACHE_FILE, 'w') as f:
-                json.dump(cache_data, f, indent=2, default=str)
+                json.dump(cache_data, f, indent=2)
             print("Data cached successfully")
         except Exception as e:
             print(f"Error saving cache: {e}")
+    
+    def _rep_to_dict(self, rep: Representative) -> Dict:
+        """Convert Representative object to dictionary"""
+        return {
+            'name': rep.name,
+            'party': rep.party.value,
+            'district': rep.district,
+            'chamber': rep.chamber.value,
+            'house_seat': rep.house_seat.value if rep.house_seat else None,
+            'contact': {
+                'email': rep.contact.email,
+                'home_phone': rep.contact.home_phone,
+                'business_phone': rep.contact.business_phone,
+                'statehouse_phone': rep.contact.statehouse_phone,
+                'mailing_address': rep.contact.mailing_address
+            },
+            'occupation': rep.occupation,
+            'term_number': rep.term_number,
+            'committees': rep.committees,
+            'bio': rep.bio
+        }
+    
+    def _committee_to_dict(self, committee: Committee) -> Dict:
+        """Convert Committee object to dictionary"""
+        return {
+            'name': committee.name,
+            'chamber': committee.chamber.value,
+            'chair': committee.chair,
+            'vice_chair': committee.vice_chair,
+            'members': committee.members
+        }
+    
+    def _dict_to_rep(self, rep_dict: Dict) -> Representative:
+        """Convert dictionary back to Representative object"""
+        contact = Contact(
+            email=rep_dict['contact']['email'],
+            home_phone=rep_dict['contact'].get('home_phone'),
+            business_phone=rep_dict['contact'].get('business_phone'),
+            statehouse_phone=rep_dict['contact'].get('statehouse_phone'),
+            mailing_address=rep_dict['contact'].get('mailing_address')
+        )
+        
+        return Representative(
+            name=rep_dict['name'],
+            party=Party(rep_dict['party']),
+            district=rep_dict['district'],
+            chamber=Chamber(rep_dict['chamber']),
+            contact=contact,
+            occupation=rep_dict.get('occupation'),
+            term_number=rep_dict.get('term_number'),
+            house_seat=HouseSeat(rep_dict['house_seat']) if rep_dict.get('house_seat') else None,
+            committees=rep_dict.get('committees', []),
+            bio=rep_dict.get('bio')
+        )
+    
+    def _dict_to_committee(self, committee_dict: Dict) -> Committee:
+        """Convert dictionary back to Committee object"""
+        return Committee(
+            name=committee_dict['name'],
+            chamber=Chamber(committee_dict['chamber']),
+            chair=committee_dict.get('chair'),
+            vice_chair=committee_dict.get('vice_chair'),
+            members=committee_dict.get('members', [])
+        )
     
     def _make_request(self, url: str) -> Optional[BeautifulSoup]:
         """Make a request with error handling and rate limiting"""
